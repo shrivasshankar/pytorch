@@ -828,7 +828,10 @@ def local_reduce_feed_main_output_plan(
 
 
 def single_output_plan(output: torch.fx.Node) -> FlexGemmOutputPlan:
-    """Classify a single-output epilogue."""
+    """Classify a single-output epilogue after checking feed-main consumers."""
+    feed_main_plan = local_reduce_feed_main_output_plan(output)
+    if feed_main_plan is not None:
+        return feed_main_plan
     return FlexGemmOutputPlan(output)
 
 
@@ -848,6 +851,9 @@ def tuple_output_plan(
         )
         if compressed_aux_plan is not None:
             return FlexGemmOutputPlan(output, local_reduce=compressed_aux_plan)
+    feed_main_plan = local_reduce_feed_main_output_plan(output, aux_outputs)
+    if feed_main_plan is not None:
+        return feed_main_plan
     return FlexGemmOutputPlan(output, aux_outputs)
 
 

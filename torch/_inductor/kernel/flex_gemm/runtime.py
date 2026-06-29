@@ -16,6 +16,7 @@ from torch._inductor.kernel.flex_gemm.constraints import (
     local_reduce_default_combine_key,
     local_reduce_default_finalize_key,
     local_reduce_feeds_main,
+    LOCAL_REDUCE_FEEDS_MAIN_KWARG,
     LOCAL_REDUCE_FINALIZE_KEY_KWARG,
     LOCAL_REDUCE_GROUP_KWARG,
     local_reduce_needs_physical_callbacks,
@@ -332,6 +333,7 @@ def local_reduce_gemm_act_kwargs(
         return {}
     return {
         LOCAL_REDUCE_RETURNS_KWARG: local_reduce_out is not None,
+        LOCAL_REDUCE_FEEDS_MAIN_KWARG: local_reduce.feeds_main,
         LOCAL_REDUCE_OUT_KWARG: local_reduce_out,
         LOCAL_REDUCE_GROUP_KWARG: local_reduce.group,
         LOCAL_REDUCE_AXIS_KWARG: local_reduce.axis,
